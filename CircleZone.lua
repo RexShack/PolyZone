@@ -2,7 +2,8 @@ CircleZone = {}
 -- Inherits from PolyZone
 setmetatable(CircleZone, { __index = PolyZone })
 
-function CircleZone:draw()
+function CircleZone:draw(forceDraw)
+  if not forceDraw and not self.debugPoly then return end
   local center = self.center
   local debugColor = self.debugColor
   local r, g, b = debugColor[1], debugColor[2], debugColor[3]
@@ -11,7 +12,7 @@ function CircleZone:draw()
     DrawMarker(28, center.x, center.y, center.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, radius, radius, radius, r, g, b, 48, false, false, 2, nil, nil, false)
   else
     local diameter = self.diameter
-    DrawMarker(1, center.x, center.y, -200.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, diameter, diameter, 400.0, r, g, b, 96, false, false, 2, nil, nil, false)
+    DrawMarker(1, center.x, center.y, -500.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, diameter, diameter, 1000.0, r, g, b, 96, false, false, 2, nil, nil, false)
   end
 end
 
@@ -21,10 +22,10 @@ local function _initDebug(zone, options)
   if not options.debugPoly then
     return
   end
-  
+
   Citizen.CreateThread(function()
     while not zone.destroyed do
-      zone:draw()
+      zone:draw(false)
       Citizen.Wait(0)
     end
   end)
